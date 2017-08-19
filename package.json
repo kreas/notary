@@ -18,5 +18,9 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5"
+  },
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "jsrsasign": "^8.0.3"
   }
 }

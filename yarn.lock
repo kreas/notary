@@ -1112,6 +1112,10 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
 
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+
 css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
@@ -2132,6 +2136,10 @@ jsprim@^1.2.2:
     extsprintf "1.3.0"
     json-schema "0.2.3"
     verror "1.10.0"
+
+jsrsasign@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-8.0.3.tgz#04017b1452f5f7ef6cfff053fede4d397afc8910"
 
 kind-of@^2.0.1:
   version "2.0.1"

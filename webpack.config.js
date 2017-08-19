@@ -8,7 +8,9 @@ dir => path.join(__dirname, dir)
 var config = {
   context: resolve('/src'), // `__dirname` is root of project and `src` is source
   entry: {
-    app: './index.js'
+    content: './content.js',
+    browser: './browser.js',
+    'options/index': './options/index.js'
   },
   output: {
     path: resolve('/dist'), // `dist` is the destination
@@ -43,7 +45,9 @@ var config = {
   plugins: [
     new CopyWebpackPlugin([
       {from: resolve('/src/manifest.json'), to: resolve('/dist')},
+      {from: resolve('/src/index.js'), to: resolve('/dist')},
       {from: resolve('/src/assets/popup.html'), to: resolve('/dist')},
+      {from: resolve('/src/options/index.html'), to: resolve('/dist/options')},
       {from: resolve('/src/assets/icon.png'), to: resolve('/dist')}
     ]),
     new HtmlWebpackPlugin({

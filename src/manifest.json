@@ -1,8 +1,9 @@
 {
     "manifest_version": 2,
     "name": "Scribe: Notary",
-    "description": "Digitally sign data sent by Scribe: Health ID",
+    "description": "Digitally sign data sent Scribe: Health ID",
     "version": "0.1.0",
+    "options_page": "options/index.html",
     "browser_action": {
         "default_icon": "icon.png",
         "default_popup": "popup.html"
@@ -12,8 +13,14 @@
         "storage"
     ],
     "content_scripts": [{
-        "matches": ["http://localhost:5000/*", "http://127.0.0.1:5000/*"],
+        "matches": [
+            "https://*/*",
+            "http://*/*"
+        ],
         "css": [],
-        "js": ["app.bundle.js"]
-    }]
+        "js": ["content.bundle.js"]
+    }],
+    "web_accessible_resources": [
+      "browser.bundle.js"
+    ]
 }
