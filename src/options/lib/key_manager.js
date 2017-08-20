@@ -50,18 +50,7 @@ const exportPublicKey =
       importKey(key.public, ['verify'])
         .then(res => {
           crypto.subtle.exportKey('spki', res)
-          .then(key => {
-            let base64Cert = arrayBufferToBase64String(key)
-            let blob = generateKeyFile(base64Cert, 'PUBLIC KEY')
-            let url = window.URL.createObjectURL(blob)
-
-            let elm = document.createElement('a')
-            elm.href = url
-            elm.download = 'scribe.pub'
-            document.body.appendChild(elm)
-            elm.click()
-            document.body.removeChild(elm)
-          })
+          .then(key => generateKeyBlob(key))
         })
     })
   }
@@ -72,20 +61,16 @@ const exportPrivateKey =
       importKey(key.private, ['sign'])
         .then(res => {
           crypto.subtle.exportKey('pkcs8', res)
-          .then(key => {
-            let base64Cert = arrayBufferToBase64String(key)
-            let blob = generateKeyFile(base64Cert, 'PRIVATE KEY')
-            let url = window.URL.createObjectURL(blob)
-
-            let elm = document.createElement('a')
-            elm.href = url
-            elm.download = 'scribe.pub'
-            document.body.appendChild(elm)
-            elm.click()
-            document.body.removeChild(elm)
-          })
+          .then(key => generateKeyBlob(key))
         })
     })
+  }
+
+const generateKeyBlob =
+  key => {
+    let base64Cert = arrayBufferToBase64String(key)
+    let blob = generateKeyFile(base64Cert, 'PRIVATE KEY')
+    return window.URL.createObjectURL(blob)
   }
 
 const generateKeyFile =
