@@ -1,5 +1,9 @@
 /* global chrome, btoa */
 
+//
+// Configuration
+//
+
 const crypto = window.crypto
 const usages = ['sign', 'verify']
 const alg = {
@@ -8,6 +12,10 @@ const alg = {
   publicExponent: new Uint8Array([1, 0, 1]),
   hash: {name: 'SHA-256'}
 }
+
+//
+// Helper Functions
+//
 
 const importKey =
   (jwk, usages) => crypto.subtle.importKey('jwk', jwk, alg, true, usages)
@@ -32,47 +40,12 @@ const exportKeyToStorage =
       })
   }
 
-const setKeys =
-  () => {
-    chrome.storage.local.get(['public', 'private'], res => {
-      if (!res.public || !res.private) {
-        createAndSaveAKeyPair()
-      }
-    })
-  }
+// const deleteKeys =
+//   () => chrome.storage.local.remove(['public', 'private'])
 
-const deleteKeys =
-  () => chrome.storage.local.remove(['public', 'private'])
-
-const exportPublicKey =
-  () => {
-    chrome.storage.local.get('public', key => {
-      importKey(key.public, ['verify'])
-        .then(res => {
-          crypto.subtle.exportKey('spki', res)
-          .then(key => generateKeyBlob(key))
-        })
-    })
-  }
-
-const exportPrivateKey =
-  () => {
-    chrome.storage.local.get('private', key => {
-      importKey(key.private, ['sign'])
-        .then(res => {
-          crypto.subtle.exportKey('pkcs8', res)
-          .then(key => generateKeyBlob(key))
-        })
-    })
-  }
-
-const generateKeyBlob =
-  key => {
-    let base64Cert = arrayBufferToBase64String(key)
-    let blob = generateKeyFile(base64Cert, 'PRIVATE KEY')
-    return window.URL.createObjectURL(blob)
-  }
-
+//
+// File Generator
+//
 const generateKeyFile =
   (base64Cert, label) => {
     var pemCert = '-----BEGIN ' + label + '-----\r\n'
@@ -104,9 +77,78 @@ const arrayBufferToBase64String =
     return btoa(byteString)
   }
 
+//
+// Download Keys
+//
+
+// Creates an invisible link on the page and clicks it to force download.
+const downloadKey =
+  (key, type) => {
+    let params = determineDownloadParams(type)
+    let base64Cert = arrayBufferToBase64String(key)
+    let blob = generateKeyFile(base64Cert, params.fileHeader)
+    let url = window.URL.createObjectURL(blob)
+
+    let elm = document.createElement('a')
+    elm.href = url
+    elm.download = params.fileName
+    document.body.appendChild(elm)
+    elm.click()
+    document.body.removeChild(elm)
+  }
+
+// determines the file params based on the type of key being downloaded.
+const determineDownloadParams =
+  type => {
+    if (type === 'private') {
+      return {fileName: 'scribe.priv', fileHeader: 'PRIVATE KEY'}
+    } else {
+      return {fileName: 'scribe.pub', fileHeader: 'PUBLIC KEY'}
+    }
+  }
+
+// Public
+const downloadPublicKey =
+  () => {
+    chrome.storage.local.get('public', key => {
+      importKey(key.public, ['verify'])
+        .then(res => {
+          crypto.subtle.exportKey('spki', res)
+          .then(key => downloadKey(key, 'public'))
+        })
+    })
+  }
+
+// Private
+const downloadPrivateKey =
+  () => {
+    return chrome.storage.local.get('private', key => {
+      importKey(key.private, ['sign'])
+        .then(res => {
+          crypto.subtle.exportKey('pkcs8', res)
+            .then(key => downloadKey(key, 'private'))
+        })
+    })
+  }
+
+const exportKey =
+  type => {
+    type === 'private' ? downloadPrivateKey() : downloadPublicKey()
+  }
+
+//
+// Export
+//
 export default {
-  setKeys,
-  deleteKeys,
-  exportPublicKey,
-  exportPrivateKey
+  exportKey: type => {
+    type === 'private' ? downloadPrivateKey() : downloadPublicKey()
+  },
+
+  createKeyPair: () => {
+    chrome.storage.local.get(['public', 'private'], res => {
+      if (!res.public || !res.private) {
+        createAndSaveAKeyPair()
+      }
+    })
+  }
 }
