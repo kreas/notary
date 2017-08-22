@@ -14,7 +14,6 @@ const User = {
     })
   },
   set: user => {
-    // console.log(user)
     chrome.storage.local.set({'notaryUser': user}, res => res)
   }
 }

@@ -1,4 +1,5 @@
 /* global chrome */
+import signer from './signer'
 
 const injectNotary =
   () => {
@@ -7,8 +8,9 @@ const injectNotary =
     scriptTag.src = chrome.extension.getURL('browser.bundle.js')
 
     container.insertBefore(scriptTag, container.children[0])
-
-    console.log(scriptTag)
   }
 
+window.addEventListener('message', e => console.log(e))
+
+signer.addSignEventHandler()
 injectNotary()
