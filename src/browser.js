@@ -1,8 +1,6 @@
-import { SHA256, enc } from 'crypto-js'
-
 let Notary = {
-  signPayload: data => {
-    return SHA256(data, 'test').toString(enc.Base64)
+  signPayload: payload => {
+    return window.postMessage({type: 'sign', payload}, '*')
   }
 }
 

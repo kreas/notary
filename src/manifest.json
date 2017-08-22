@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Scribe: Notary",
-    "description": "Digitally sign data sent Scribe: Health ID",
+    "description": "Digitally sign data sent to Scribe: Health ID",
     "version": "0.1.0",
     "options_page": "options/index.html",
     "browser_action": {
@@ -17,10 +17,13 @@
             "https://*/*",
             "http://*/*"
         ],
-        "css": [],
-        "js": ["content.bundle.js"]
+        // "css": [],
+        "js": ["content/index.bundle.js"]
     }],
     "web_accessible_resources": [
       "browser.bundle.js"
-    ]
+    ],
+    "externally_connectable": {
+      "matches": ["http://127.0.0.1:*/*"]
+    }
 }
