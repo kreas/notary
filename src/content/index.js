@@ -10,7 +10,5 @@ const injectNotary =
     container.insertBefore(scriptTag, container.children[0])
   }
 
-window.addEventListener('message', e => console.log(e))
-
 signer.addSignEventHandler()
 injectNotary()

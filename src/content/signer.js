@@ -15,10 +15,10 @@ const convertPayloadtoAB =
 
 // Sends a message to the parent page with the signed data.
 const postSignedMessage =
-  data => {
+  signature => {
     return window.postMessage({
       type: 'signed_data',
-      data: ab2str(data, 'base64')
+      signature
     }, window.location.origin)
   }
 
@@ -30,13 +30,18 @@ export default {
     window.addEventListener('message', e => {
       if (e.data.type !== 'sign') return null
 
-      storage.get('private', key => {
-        importKey(key.private, 'sign')
+      storage.get(['private', 'notaryUser'], data => {
+        importKey(data.private, 'sign')
           .then(privateKey => {
             let payload = convertPayloadtoAB(e.data.payload)
 
             crypto.subtle.sign(alg, privateKey, payload)
-              .then(data => postSignedMessage(data))
+              .then(signature =>
+                postSignedMessage({
+                  notary: data.notaryUser,
+                  value: ab2str(signature, 'base64')
+                })
+              )
           })
       })
     })

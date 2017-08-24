@@ -45,7 +45,6 @@ var config = {
   plugins: [
     new CopyWebpackPlugin([
       {from: resolve('/src/manifest.json'), to: resolve('/dist')},
-      // {from: resolve('/src/index.js'), to: resolve('/dist')},
       {from: resolve('/src/assets/popup.html'), to: resolve('/dist')},
       {from: resolve('/src/options/index.html'), to: resolve('/dist/options')},
       {from: resolve('/src/assets/icon.png'), to: resolve('/dist')}
