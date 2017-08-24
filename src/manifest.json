@@ -17,7 +17,6 @@
             "https://*/*",
             "http://*/*"
         ],
-        // "css": [],
         "js": ["content/index.bundle.js"]
     }],
     "web_accessible_resources": [
